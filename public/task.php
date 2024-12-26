@@ -8,13 +8,13 @@ require_once 'Connect.php';
     private $status;
     private $assigned_id;
     
-    public function __construct($id , $title , $description , $status , $assigned_id) {
-            $this->id=$id;
-            $this->title=$title;
-            $this->description=$description;
-            $this->status=$status;
-            $this->assigned_id=$assigned_id;
-    } 
+    // public function __construct($id , $title , $description , $status , $assigned_id) {
+    //         $this->id=$id;
+    //         $this->title=$title;
+    //         $this->description=$description;
+    //         $this->status=$status;
+    //         $this->assigned_id=$assigned_id;
+    // } 
      public function getId(){
         return $this->id;
      }
@@ -50,14 +50,15 @@ require_once 'Connect.php';
         return $this->assigned_id;
      }
 
-     public function AddTask($title ,$description , $status , $assigned_id){
-        $sql="INSERT INTO task (title,description,status,assignee_id) VALUES( ? , ? , ? , ? )";
+     public function AddTask($title ,$description , $status , $assigned_id , $type){
+        $sql="INSERT INTO task (title,description,status,assignee_id,type) VALUES( ? , ? , ? , ? , ? )";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->execute([$title , $description , $status , $assigned_id]);
+        $stmt->execute([$title , $description , $status , $assigned_id,$type]);
+        return $this->getConnection()->lastInsertId();
      }
 
  }
 
-$task=new Task(1,"adil", "test","done",2);
-$task->AddTask("ismail","brief","done",2);
+// $task=new Task(1,"adil", "test","done",2);
+// $task->AddTask("ismail","brief","done",2);
 ?>

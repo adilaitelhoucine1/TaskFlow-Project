@@ -52,6 +52,13 @@ require_once 'Connect.php';
         $result = $stmt->fetch();
         return $result ? true : false; 
     }
+    public function ShowAllUsers(){
+        $sql="SELECT * FROM users ";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        return $result;
+    }
  }
 
 //  $user = new User();

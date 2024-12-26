@@ -1,3 +1,40 @@
+<?php
+    session_start();
+    include_once 'user.php';
+    include_once 'task.php';
+    include_once 'bug.php';
+    include_once 'feature.php';
+
+    // --------------------------------------------
+    
+    if (isset($_POST['add_task']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
+          $titre = $_POST['titre'];
+          $description = $_POST['description'];
+          $type = $_POST['type'];
+          $statut = $_POST['statut'];
+          if (!empty($_POST['assigne_id'])) {
+            $assignee_id = $_POST['assigne_id']; 
+        } else {
+            echo "<script>alert('Aucun utilisateur assigne.')</script>";
+        }
+        
+
+            if ($type === 'simple') {
+               $task =new Task();
+               $task->AddTask($titre,$description,$statut,$assignee_id, $type);
+            } elseif ($type === 'feature') {
+              $task =new Feature();
+
+              $task->AddTask($titre,$description,$statut,$assignee_id, $type);
+              
+              $task->AddFeature($titre,$description,$statut,$assignee_id, $type);
+            } elseif ($type === 'bug') {
+                echo "La tâche est de type 'Tâche simple'.";
+            }
+    }
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +53,6 @@
   <nav class="bg-gradient-to-r from-purple-800 to-purple-600 p-6 shadow-lg flex items-center justify-between">
   <h1 class="text-3xl font-pacifico text-white capitalize font-bold"> Welcome 
   <?php 
-    session_start();
     echo $_SESSION['username'];
     echo $_SESSION['user_id'];
     ?></h1>
@@ -78,23 +114,23 @@
       <button id="close-modal" class="text-gray-500 hover:text-gray-800 text-xl">&times;</button>
     </div>
 
-    <form action="add_task.php" method="POST">
+    <form action="" method="POST">
       <!-- Titre -->
       <div class="mb-4">
-        <label for="titre" class="block text-sm font-medium text-gray-700 mb-2">Titre de la tâche</label>
-        <input type="text" id="titre" name="titre" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <label for="titre" class="block text-sm font-medium  text-black  mb-2">Titre de la tâche</label>
+        <input type="text" id="titre" name="titre" class=" text-black  w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
       </div>
 
       <!-- Description -->
       <div class="mb-4">
-        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-        <textarea id="description" name="description" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+        <label for="description" class="block text-sm font-medium  text-black  mb-2">Description</label>
+        <textarea id="description" name="description" rows="4" class="w-full px-4 py-2 border rounded-lg  text-black  focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
       </div>
 
       <!-- Type de tâche -->
       <div class="mb-4">
-        <label for="type" class="block text-sm font-medium text-gray-700 mb-2">Type de tâche</label>
-        <select id="type" name="type" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <label for="type" class="block text-sm font-medium text-black  mb-2">Type de tâche</label>
+        <select id="type" name="type" class="w-full px-4 py-2 border  text-black  rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="simple">simple</option>
           <option value="bug">Bug</option>
           <option value="feature">Feature</option>
@@ -103,20 +139,25 @@
 
       <!-- Statut -->
       <div class="mb-4">
-        <label for="statut" class="block text-sm font-medium mb-2">Statut</label>
-        <select id="statut" name="statut" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <label for="statut" class="block text-sm font-medium mb-2  text-black ">Statut</label>
+        <select id="statut" name="statut" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  text-black ">
           <option value="Ouvert">Ouvert</option>
           <option value="En cours">En cours</option>
           <option value="Terminé">Terminé</option>
         </select>
       </div>
 
-      <!-- Assigné à -->
       <div class="mb-4">
         <label for="assigne_id" class="block text-sm font-medium text-gray-700 mb-2">Assigné à</label>
-        <select id="assigne_id" name="assigne_id" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <select id="assigne_id" name="assigne_id" class="w-full text-black px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="">Non Assigné</option>
-          <!-- Les options utilisateurs seront ajoutées dynamiquement -->
+          <?php
+            $user=new User();
+           $Allusers= $user->ShowAllUsers();
+           foreach($Allusers as $user){
+            echo "<option value='" . $user['id'] . "'>" . $user['name'] . "</option>";
+          }
+          ?>
         </select>
       </div>
 
@@ -125,7 +166,7 @@
 
       <!-- Bouton Soumettre -->
       <div class="flex justify-end">
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <button type="submit" name="add_task" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
           Ajouter la Tâche
         </button>
       </div>

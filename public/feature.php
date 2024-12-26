@@ -1,6 +1,6 @@
 <?php
- class Feature{
-    
+ class Feature extends Task{
+    private 
  }
 
 

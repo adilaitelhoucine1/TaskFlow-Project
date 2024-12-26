@@ -1,6 +1,9 @@
 <?php
 session_start();
-include 'user.php'; 
+include 'user.php';
+if( $_SESSION['username']){
+    header('Location: index.php'); 
+}
 
 if (isset($_POST['add']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
