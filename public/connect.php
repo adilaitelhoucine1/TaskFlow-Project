@@ -1,7 +1,7 @@
 <?php
 class Connect {
     private $host = "localhost";
-    private $dbName = "taskflow"; 
+    private $dbName = "taskflowbrief"; 
     private $username = "root"; 
     private $password = "";
     private $connection; 

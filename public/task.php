@@ -57,8 +57,22 @@ require_once 'Connect.php';
         return $this->getConnection()->lastInsertId();
      }
 
+     public function getTasksByStatus($status) {
+      $sql = "SELECT task.*, users.name as assignee_name 
+              FROM task 
+              LEFT JOIN users ON task.assignee_id = users.id 
+              WHERE task.status = ?";
+      $stmt = $this->getConnection()->prepare($sql);
+      $stmt->execute([$status]);
+      return $stmt->fetchAll();
+  }
  }
 
 // $task=new Task(1,"adil", "test","done",2);
 // $task->AddTask("ismail","brief","done",2);
+// $task=new Task();
+// $tasks=$task->getTasksByStatus("En cours");
+// foreach($tasks as $task){
+//     echo $task['title'] . "<br>";
+// }
 ?>

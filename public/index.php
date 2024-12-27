@@ -6,7 +6,7 @@
     include_once 'feature.php';
 
     // --------------------------------------------
-    
+
     if (isset($_POST['add_task']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
           $titre = $_POST['titre'];
           $description = $_POST['description'];
@@ -22,15 +22,21 @@
             if ($type === 'simple') {
                $task =new Task();
                $task->AddTask($titre,$description,$statut,$assignee_id, $type);
-            } elseif ($type === 'feature') {
-              $task =new Feature();
-
-              $task->AddTask($titre,$description,$statut,$assignee_id, $type);
+              } elseif ($type === 'feature') {
+                $functionality = $_POST['functionality'];
               
-              $task->AddFeature($titre,$description,$statut,$assignee_id, $type);
+                $task = new Feature();
+
+                $task->AddFeatureWithTask($titre, $description, $statut, $assignee_id, $type, $functionality);
             } elseif ($type === 'bug') {
-                echo "La tâche est de type 'Tâche simple'.";
+                $severity = $_POST['urgence'];
+                 $task = new Bug();
+                $task->AddBugWithTask($titre,$description,$statut,$assignee_id, $type,$severity);
+        
             }
+
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
     }
 
 
@@ -69,42 +75,67 @@
   </nav>
 
   <main class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Open Tasks -->
     <section class="bg-gray-800 p-4 rounded-lg shadow-lg border-l-4 border-purple-500">
-      <h2 class="text-lg font-bold text-purple-400 mb-4">🟣 Ouvert</h2>
-      <ul class="space-y-4">
-        <!-- Task Item -->
-        <li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">
-          <h3 class="font-semibold text-purple-300 text-xl">⚙️ Corriger l'erreur 404</h3>
-          <p class="mt-2 text-sm text-gray-400">Les utilisateurs reçoivent une erreur lors de la navigation.</p>
-          <span class="block mt-4 text-xs text-gray-500">👤 Assigné à : Jean Dupont</span>
-        </li>
-      </ul>
+        <h2 class="text-lg font-bold text-purple-400 mb-4">🟣 Ouvert</h2>
+        <ul class="space-y-4">
+            <?php
+            $task = new Task();
+            $openTasks = $task->getTasksByStatus('Ouvert');
+            foreach ($openTasks as $taskItem) {
+                echo '<li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">';
+                echo '<h3 class="font-semibold text-purple-300 text-xl">'. htmlspecialchars($taskItem['title']) .'</h3>';
+                echo '<p class="text-gray-400 mt-2">'. htmlspecialchars($taskItem['description']) .'</p>';
+                echo '<div class="mt-4 flex justify-between items-center">';
+                echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskItem['assignee_name']) .'</span>';
+                echo '</div>';
+                echo '</li>';
+            }
+            ?>
+        </ul>
     </section>
 
-    <!-- Column: En Cours -->
-    <section class="bg-gray-800 p-4 rounded-lg shadow-lg border-l-4 border-green-500">
-      <h2 class="text-lg font-bold text-green-400 mb-4">🟢 En Cours</h2>
-      <ul class="space-y-4">
-        <li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">
-          <h3 class="font-semibold text-green-300 text-xl">📦 Migration des données</h3>
-          <p class="mt-2 text-sm text-gray-400">Transférer la base de données vers AWS.</p>
-          <span class="block mt-4 text-xs text-gray-500">👤 Assigné à : Alex Brown</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Column: Terminé -->
+    <!-- In Progress Tasks -->
     <section class="bg-gray-800 p-4 rounded-lg shadow-lg border-l-4 border-blue-500">
-      <h2 class="text-lg font-bold text-blue-400 mb-4">🔵 Terminé</h2>
-      <ul class="space-y-4">
-        <li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">
-          <h3 class="font-semibold text-blue-300 text-xl">✅ Implémenter le système d'authentification</h3>
-          <p class="mt-2 text-sm text-gray-400">Les utilisateurs peuvent désormais se connecter.</p>
-          <span class="block mt-4 text-xs text-gray-500">👤 Assigné à : Marie Curie</span>
-        </li>
-      </ul>
+        <h2 class="text-lg font-bold text-blue-400 mb-4">🔵 En cours</h2>
+        <ul class="space-y-4">
+            <?php
+            $task = new Task();
+            $inProgressTasks = $task->getTasksByStatus('En cours');
+            foreach ($inProgressTasks as $taskprogress) {
+              echo '<li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">';
+              echo '<h3 class="font-semibold text-purple-300 text-xl">'. htmlspecialchars($taskprogress['title']) .'</h3>';
+              echo '<p class="text-gray-400 mt-2">'. htmlspecialchars($taskprogress['description']) .'</p>';
+              echo '<div class="mt-4 flex justify-between items-center">';
+              echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskprogress['assignee_name']) .'</span>';
+              echo '</div>';
+              echo '</li>';
+          }
+            ?>
+        </ul>
     </section>
-  </main>
+
+    <!-- Completed Tasks -->
+    <section class="bg-gray-800 p-4 rounded-lg shadow-lg border-l-4 border-green-500">
+        <h2 class="text-lg font-bold text-green-400 mb-4">🟢 Terminé</h2>
+        <ul class="space-y-4">
+            <?php
+            $task = new Task();
+            $completedTasks = $task->getTasksByStatus('Terminé');
+            foreach ($completedTasks as $taskprogress) {
+              echo '<li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">';
+              echo '<h3 class="font-semibold text-purple-300 text-xl">'. htmlspecialchars($taskprogress['title']) .'</h3>';
+              echo '<p class="text-gray-400 mt-2">'. htmlspecialchars($taskprogress['description']) .'</p>';
+              echo '<div class="mt-4 flex justify-between items-center">';
+              echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskprogress['assignee_name']) .'</span>';
+              echo '</div>';
+              echo '</li>';
+          }
+            ?>
+        </ul>
+    </section>
+</main>
+
 
  <!-- Modal -->
 <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -160,6 +191,11 @@
           ?>
         </select>
       </div>
+
+      <div class="feature mb-4 hidden ">
+          <label for="fonctionnalite" class="block text-sm font-medium text-gray-700 mb-2">Fonctionnalité</label>
+          <input type="text" id="fonctionnalite" name="functionality" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
 
       <!-- Attributs spécifiques selon le type de tâche -->
       <div id="additionalFields"></div>
