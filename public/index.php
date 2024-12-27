@@ -122,8 +122,7 @@
                 echo '<span class="text-sm text-red-500">Type: Bug</span>';
             }
 
-            echo '<form method="GET" action="update_status.php" class="mt-4">
-';
+            echo '<form method="GET" action="update_status.php" class="mt-4">';
             echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskItem['id']) . '">';
             echo '<select name="new_status" class="text-gray-700 p-1 rounded-lg">';
             echo '<option value="En cours">🟠 En cours</option>';
@@ -162,6 +161,16 @@
                 echo '<span class="text-sm text-red-500">Type: Bug</span>';
             }
 
+            echo '<form method="GET" action="update_status.php" class="mt-4">';
+            echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskItem['id']) . '">';
+            echo '<select name="new_status" class="text-gray-700 p-1 rounded-lg">';
+            echo '<option value="En cours">🟠 En cours</option>';
+            echo '<option value="Terminé">🟢 Terminé</option>';
+            echo '</select>';
+            echo '<button type="submit" name="modifier_task" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Modifier</button>';
+            echo '</form>';
+
+
               echo '</div>';
               echo '</li>';
           }
@@ -190,6 +199,19 @@
             }elseif(($taskItem['type'])=='bug'){
                 echo '<span class="text-sm text-red-500">Type: Bug</span>';
             }
+            
+
+            echo '<form method="GET" action="update_status.php" class="mt-4">';
+            echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskItem['id']) . '">';
+            echo '<select name="new_status" class="text-gray-700 p-1 rounded-lg">';
+            echo '<option value="En cours">🟠 En cours</option>';
+            echo '<option value="Terminé">🟢 Terminé</option>';
+            echo '</select>';
+            echo '<button type="submit" name="modifier_task" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Modifier</button>';
+            echo '</form>';
+
+
+
             
               echo '</div>';
               echo '</li>';
