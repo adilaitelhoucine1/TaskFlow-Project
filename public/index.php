@@ -114,13 +114,13 @@
             echo '<span class="text-sm text-gray-500">Assigné à: ' . htmlspecialchars($taskItem['assignee_name']) . '</span><br>';
             
 
-            if (($taskItem['type']) == 'simple') {
-                echo '<span class="text-sm text-green-500">Type: Simple</span>';
-            } elseif (($taskItem['type']) == 'feature') {
-                echo '<span class="text-sm text-blue-500">Type: Feature</span>';
-            } elseif (($taskItem['type']) == 'bug') {
-                echo '<span class="text-sm text-red-500">Type: Bug</span>';
-            }
+            // if (($taskItem['type']) == 'simple') {
+            //     echo '<span class="text-sm text-green-500">Type: Simple</span>';
+            // } elseif (($taskItem['type']) == 'feature') {
+            //     echo '<span class="text-sm text-blue-500">Type: Feature</span>';
+            // } elseif (($taskItem['type']) == 'bug') {
+            //     echo '<span class="text-sm text-red-500">Type: Bug</span>';
+            // }
 
             echo '<form method="GET" action="update_status.php" class="mt-4">';
             echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskItem['id']) . '">';
@@ -153,13 +153,13 @@
               echo '<div class="mt-4 flex justify-between items-center">';
               echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskprogress['assignee_name']) .'</span>';
 
-              if(($taskItem['type'])=='simple'){
-                echo '<span class="text-sm text-green-500">Type: Simple</span>';
-            }elseif(($taskItem['type'])=='feature'){
-                echo '<span class="text-sm text-blue-500">Type: Feature</span>';
-            }elseif(($taskItem['type'])=='bug'){
-                echo '<span class="text-sm text-red-500">Type: Bug</span>';
-            }
+            //   if(($taskItem['type'])=='simple'){
+            //     echo '<span class="text-sm text-green-500">Type: Simple</span>';
+            // }elseif(($taskItem['type'])=='feature'){
+            //     echo '<span class="text-sm text-blue-500">Type: Feature</span>';
+            // }elseif(($taskItem['type'])=='bug'){
+            //     echo '<span class="text-sm text-red-500">Type: Bug</span>';
+            // }
 
             echo '<form method="GET" action="update_status.php" class="mt-4">';
             echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskItem['id']) . '">';
@@ -192,13 +192,13 @@
               echo '<div class="mt-4 flex justify-between items-center">';
               echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskprogress['assignee_name']) .'</span>';
 
-              if(($taskItem['type'])=='simple'){
-                echo '<span class="text-sm text-green-500">Type: Simple</span>';
-            }elseif(($taskItem['type'])=='feature'){
-                echo '<span class="text-sm text-blue-500">Type: Feature</span>';
-            }elseif(($taskItem['type'])=='bug'){
-                echo '<span class="text-sm text-red-500">Type: Bug</span>';
-            }
+            //   if(($taskItem['type'])=='simple'){
+            //     echo '<span class="text-sm text-green-500">Type: Simple</span>';
+            // }elseif(($taskItem['type'])=='feature'){
+            //     echo '<span class="text-sm text-blue-500">Type: Feature</span>';
+            // }elseif(($taskItem['type'])=='bug'){
+            //     echo '<span class="text-sm text-red-500">Type: Bug</span>';
+            // }
             
 
             echo '<form method="GET" action="update_status.php" class="mt-4">';
