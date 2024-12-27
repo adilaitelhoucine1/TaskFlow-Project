@@ -71,7 +71,6 @@ require_once 'Connect.php';
    $sql = "UPDATE task SET status = ? WHERE id = ?";
    $stmt = $this->getConnection()->prepare($sql);
    $stmt->execute([$newStatus, $taskId]);
-   return $stmt;
 }
 
 
