@@ -11,9 +11,10 @@ closeModal.addEventListener('click', () => {
 });
 document.getElementById('type').addEventListener('change', function() {
     const additionalFields = document.getElementById('additionalFields');
-    additionalFields.innerHTML = ''; // Réinitialiser les champs supplémentaires
+  //  additionalFields.innerHTML = ''; 
   
     if (this.value === 'bug') {
+      //additionalFields.classList.add('hidden');
       additionalFields.innerHTML = `
         <div class="mb-4">
           <label for="urgence" class="block text-sm font-medium text-gray-700 mb-2">Niveau d'Urgence</label>
@@ -22,8 +23,15 @@ document.getElementById('type').addEventListener('change', function() {
       `;
     } else if (this.value === 'feature') {
       additionalFields.classList.remove('hidden');
+      additionalFields.innerHTML = `
+       <div class="feature mb-4">
+          <label for="fonctionnalite" class="block text-sm font-medium text-gray-700 mb-2">Fonctionnalité</label>
+          <input type="text" id="fonctionnalite" name="functionality" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+      `;
     }else if(this.value === 'simple'){
+      //additionalFields.classList.add('hidden');
         additionalFields.innerHTML="";
     }
   });
-  
+     

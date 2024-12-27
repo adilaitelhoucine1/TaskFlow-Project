@@ -66,6 +66,16 @@ require_once 'Connect.php';
       $stmt->execute([$status]);
       return $stmt->fetchAll();
   }
+
+  public function updateTaskStatus($taskId, $newStatus) {
+   $sql = "UPDATE task SET status = ? WHERE id = ?";
+   $stmt = $this->getConnection()->prepare($sql);
+   $stmt->execute([$newStatus, $taskId]);
+   return $stmt;
+}
+
+
+
  }
 
 // $task=new Task(1,"adil", "test","done",2);
@@ -74,5 +84,6 @@ require_once 'Connect.php';
 // $tasks=$task->getTasksByStatus("En cours");
 // foreach($tasks as $task){
 //     echo $task['title'] . "<br>";
-// }
+// // }
+
 ?>

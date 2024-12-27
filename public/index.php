@@ -38,8 +38,30 @@
             header("Location: " . $_SERVER['PHP_SELF']);
             exit();
     }
+    
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $taskId = $_POST['task_id'];
+        $newStatus = $_POST['new_status'];
+    
+        if (!empty($taskId) && !empty($newStatus)) {
+            $task = new Task();
+            $isUpdated = $task->updateTaskStatus($taskId, $newStatus);
+    
+            if ($isUpdated) {
+                header('Location: index.php'); 
+                exit;
+            } else {
+                echo 'Erreur lors de la mise à jour du statut.';
+            }
+        } else {
+            echo 'invalid data.';
+        }
+    }
+  
+    
 
-
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,23 +99,46 @@
   <main class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
     <!-- Open Tasks -->
     <section class="bg-gray-800 p-4 rounded-lg shadow-lg border-l-4 border-purple-500">
-        <h2 class="text-lg font-bold text-purple-400 mb-4">🟣 Ouvert</h2>
-        <ul class="space-y-4">
-            <?php
-            $task = new Task();
-            $openTasks = $task->getTasksByStatus('Ouvert');
-            foreach ($openTasks as $taskItem) {
-                echo '<li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">';
-                echo '<h3 class="font-semibold text-purple-300 text-xl">'. htmlspecialchars($taskItem['title']) .'</h3>';
-                echo '<p class="text-gray-400 mt-2">'. htmlspecialchars($taskItem['description']) .'</p>';
-                echo '<div class="mt-4 flex justify-between items-center">';
-                echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskItem['assignee_name']) .'</span>';
-                echo '</div>';
-                echo '</li>';
+    <h2 class="text-lg font-bold text-purple-400 mb-4">🟣 Ouvert</h2>
+    
+    <ul class="space-y-4">
+        <?php
+        $task = new Task();
+        $openTasks = $task->getTasksByStatus('Ouvert');
+        foreach ($openTasks as $taskItem) {
+          echo '<li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">';
+          echo '<h3 class="font-semibold text-purple-300 text-xl">' . htmlspecialchars($taskItem['title']) . '</h3>';
+          echo '<span class="text-sm text-gray-500">status : ' . htmlspecialchars($taskItem['status']) . '</span><br>';
+            echo '<p class="text-gray-400 mt-2">' . htmlspecialchars($taskItem['description']) . '</p>';
+            echo '<div class="mt-4 flex justify-between items-center">';
+            echo '<span class="text-sm text-gray-500">Assigné à: ' . htmlspecialchars($taskItem['assignee_name']) . '</span><br>';
+            
+
+            if (($taskItem['type']) == 'simple') {
+                echo '<span class="text-sm text-green-500">Type: Simple</span>';
+            } elseif (($taskItem['type']) == 'feature') {
+                echo '<span class="text-sm text-blue-500">Type: Feature</span>';
+            } elseif (($taskItem['type']) == 'bug') {
+                echo '<span class="text-sm text-red-500">Type: Bug</span>';
             }
-            ?>
-        </ul>
-    </section>
+
+            echo '<form method="GET" action="update_status.php" class="mt-4">
+';
+            echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskItem['id']) . '">';
+            echo '<select name="new_status" class="text-gray-700 p-1 rounded-lg">';
+            echo '<option value="En cours">🟠 En cours</option>';
+            echo '<option value="Terminé">🟢 Terminé</option>';
+            echo '</select>';
+            echo '<button type="submit" name="modifier_task" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Modifier</button>';
+            echo '</form>';
+
+            echo '</div>';
+            echo '</li>';
+        }
+        ?>
+    </ul>
+</section>
+
 
     <!-- In Progress Tasks -->
     <section class="bg-gray-800 p-4 rounded-lg shadow-lg border-l-4 border-blue-500">
@@ -108,6 +153,15 @@
               echo '<p class="text-gray-400 mt-2">'. htmlspecialchars($taskprogress['description']) .'</p>';
               echo '<div class="mt-4 flex justify-between items-center">';
               echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskprogress['assignee_name']) .'</span>';
+
+              if(($taskItem['type'])=='simple'){
+                echo '<span class="text-sm text-green-500">Type: Simple</span>';
+            }elseif(($taskItem['type'])=='feature'){
+                echo '<span class="text-sm text-blue-500">Type: Feature</span>';
+            }elseif(($taskItem['type'])=='bug'){
+                echo '<span class="text-sm text-red-500">Type: Bug</span>';
+            }
+
               echo '</div>';
               echo '</li>';
           }
@@ -128,6 +182,15 @@
               echo '<p class="text-gray-400 mt-2">'. htmlspecialchars($taskprogress['description']) .'</p>';
               echo '<div class="mt-4 flex justify-between items-center">';
               echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskprogress['assignee_name']) .'</span>';
+
+              if(($taskItem['type'])=='simple'){
+                echo '<span class="text-sm text-green-500">Type: Simple</span>';
+            }elseif(($taskItem['type'])=='feature'){
+                echo '<span class="text-sm text-blue-500">Type: Feature</span>';
+            }elseif(($taskItem['type'])=='bug'){
+                echo '<span class="text-sm text-red-500">Type: Bug</span>';
+            }
+            
               echo '</div>';
               echo '</li>';
           }
@@ -192,13 +255,13 @@
         </select>
       </div>
 
-      <div class="feature mb-4 hidden ">
-          <label for="fonctionnalite" class="block text-sm font-medium text-gray-700 mb-2">Fonctionnalité</label>
-          <input type="text" id="fonctionnalite" name="functionality" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
+     
 
       <!-- Attributs spécifiques selon le type de tâche -->
-      <div id="additionalFields"></div>
+      <div id="additionalFields">
+
+
+      </div>
 
       <!-- Bouton Soumettre -->
       <div class="flex justify-end">
