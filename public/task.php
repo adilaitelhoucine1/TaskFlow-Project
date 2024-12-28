@@ -72,6 +72,19 @@ require_once 'Connect.php';
    $stmt = $this->getConnection()->prepare($sql);
    $stmt->execute([$newStatus, $taskId]);
 }
+public function ShowTask($id) {
+   $sql = "SELECT *
+           FROM task t 
+           INNER JOIN users u ON t.assignee_id = u.id 
+           WHERE t.id = ?";
+           
+       $stmt = $this->getConnection()->prepare($sql);
+       
+       $stmt->execute([$id]);
+       
+       return $stmt->fetchAll();
+
+}
 
 
 
@@ -84,5 +97,14 @@ require_once 'Connect.php';
 // foreach($tasks as $task){
 //     echo $task['title'] . "<br>";
 // // }
-
+// $task = new Task();
+// $taskDetails = $task->ShowTask(82);
+// if ($taskDetails) {
+//    foreach ($taskDetails as $detail) {
+//        echo "<h1>Titre : " . htmlspecialchars($detail['title']) . "</h1>";
+//        echo "<p>Description : " . htmlspecialchars($detail['description']) . "</p>";
+//        echo "<p>Statut : " . htmlspecialchars($detail['status']) . "</p>";
+//        echo "<p>Assigné à : " . htmlspecialchars($detail['name']) . "</p>";
+//    }
+// }
 ?>

@@ -4,6 +4,7 @@
     include_once 'task.php';
     include_once 'bug.php';
     include_once 'feature.php';
+    include_once 'Connect.php';
 
     // --------------------------------------------
 
@@ -82,7 +83,6 @@
   <h1 class="text-3xl font-pacifico text-white capitalize font-bold"> Welcome 
   <?php 
     echo $_SESSION['username'];
-    echo $_SESSION['user_id'];
     ?></h1>
     <div class="flex gap-4 items-center">
       <input
@@ -110,21 +110,23 @@
           echo '<h3 class="font-semibold text-purple-300 text-xl">' . htmlspecialchars($taskItem['title']) . '</h3>';
           echo '<span class="text-sm text-gray-500">status : ' . htmlspecialchars($taskItem['status']) . '</span><br>';
             echo '<p class="text-gray-400 mt-2">' . htmlspecialchars($taskItem['description']) . '</p>';
+            echo '<a href="detailspage.php?id=' . $taskItem['id'] . '">Voir les détails</a>';
             echo '<div class="mt-4 flex justify-between items-center">';
             echo '<span class="text-sm text-gray-500">Assigné à: ' . htmlspecialchars($taskItem['assignee_name']) . '</span><br>';
             
 
-            // if (($taskItem['type']) == 'simple') {
-            //     echo '<span class="text-sm text-green-500">Type: Simple</span>';
-            // } elseif (($taskItem['type']) == 'feature') {
-            //     echo '<span class="text-sm text-blue-500">Type: Feature</span>';
-            // } elseif (($taskItem['type']) == 'bug') {
-            //     echo '<span class="text-sm text-red-500">Type: Bug</span>';
-            // }
+            if (($taskItem['type']) == 'simple') {
+                echo '<span class="text-sm text-green-500">Type: Simple</span>';
+            } elseif (($taskItem['type']) == 'feature') {
+                echo '<span class="text-sm text-blue-500">Type: Feature</span>';
+            } elseif (($taskItem['type']) == 'bug') {
+                echo '<span class="text-sm text-red-500">Type: Bug</span>';
+            }
 
             echo '<form method="GET" action="update_status.php" class="mt-4">';
             echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskItem['id']) . '">';
             echo '<select name="new_status" class="text-gray-700 p-1 rounded-lg">';
+            echo '<option value="Ouvert">🔵 Ouvert</option>';
             echo '<option value="En cours">🟠 En cours</option>';
             echo '<option value="Terminé">🟢 Terminé</option>';
             echo '</select>';
@@ -150,21 +152,24 @@
               echo '<li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">';
               echo '<h3 class="font-semibold text-purple-300 text-xl">'. htmlspecialchars($taskprogress['title']) .'</h3>';
               echo '<p class="text-gray-400 mt-2">'. htmlspecialchars($taskprogress['description']) .'</p>';
+              echo '<a href="detailspage.php?id=' . $taskprogress['id'] . '">Voir les détails</a>';
               echo '<div class="mt-4 flex justify-between items-center">';
               echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskprogress['assignee_name']) .'</span>';
-
-            //   if(($taskItem['type'])=='simple'){
-            //     echo '<span class="text-sm text-green-500">Type: Simple</span>';
-            // }elseif(($taskItem['type'])=='feature'){
-            //     echo '<span class="text-sm text-blue-500">Type: Feature</span>';
-            // }elseif(($taskItem['type'])=='bug'){
-            //     echo '<span class="text-sm text-red-500">Type: Bug</span>';
-            // }
+              
+              
+              if(($taskprogress['type']) ==='simple'){
+                echo '<span class="text-sm text-green-500">Type: Simple</span>';
+            }elseif(($taskprogress['type']) ==='feature'){
+                echo '<span class="text-sm text-blue-500">Type: Feature</span>';
+            }elseif(($taskprogress['type']) ==='bug'){
+                echo '<span class="text-sm text-red-500">Type: Bug</span>';
+            }
 
             echo '<form method="GET" action="update_status.php" class="mt-4">';
-            echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskItem['id']) . '">';
+            echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskprogress['id']) . '">';
             echo '<select name="new_status" class="text-gray-700 p-1 rounded-lg">';
             echo '<option value="En cours">🟠 En cours</option>';
+            echo '<option value="Ouvert">🔵 Ouvert</option>';
             echo '<option value="Terminé">🟢 Terminé</option>';
             echo '</select>';
             echo '<button type="submit" name="modifier_task" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Modifier</button>';
@@ -185,27 +190,30 @@
             <?php
             $task = new Task();
             $completedTasks = $task->getTasksByStatus('Terminé');
-            foreach ($completedTasks as $taskprogress) {
+            foreach ($completedTasks as $Completetask) {
               echo '<li class="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform">';
-              echo '<h3 class="font-semibold text-purple-300 text-xl">'. htmlspecialchars($taskprogress['title']) .'</h3>';
-              echo '<p class="text-gray-400 mt-2">'. htmlspecialchars($taskprogress['description']) .'</p>';
-              echo '<div class="mt-4 flex justify-between items-center">';
-              echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($taskprogress['assignee_name']) .'</span>';
+              echo '<h3 class="font-semibold text-purple-300 text-xl">'. htmlspecialchars($Completetask['title']) .'</h3>';
+              echo '<p class="text-gray-400 mt-2">'. htmlspecialchars($Completetask['description']) .'</p>';
+              echo '<a href="detailspage.php?id=' . $Completetask['id'] . '">Voir les détails</a>';
 
-            //   if(($taskItem['type'])=='simple'){
-            //     echo '<span class="text-sm text-green-500">Type: Simple</span>';
-            // }elseif(($taskItem['type'])=='feature'){
-            //     echo '<span class="text-sm text-blue-500">Type: Feature</span>';
-            // }elseif(($taskItem['type'])=='bug'){
-            //     echo '<span class="text-sm text-red-500">Type: Bug</span>';
-            // }
+              echo '<div class="mt-4 flex justify-between items-center">';
+              echo '<span class="text-sm text-gray-500">Assigné à: '. htmlspecialchars($Completetask['assignee_name']) .'</span>';
+
+              if(($Completetask['type'])=='simple'){
+                echo '<span class="text-sm text-green-500">Type: Simple</span>';
+            }elseif(($Completetask['type'])=='feature'){
+                echo '<span class="text-sm text-blue-500">Type: Feature</span>';
+            }elseif(($Completetask['type'])=='bug'){
+                echo '<span class="text-sm text-red-500">Type: Bug</span>';
+            }
             
 
             echo '<form method="GET" action="update_status.php" class="mt-4">';
-            echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($taskItem['id']) . '">';
+            echo '<input type="hidden" name="task_id" value="' . htmlspecialchars($Completetask['id']) . '">';
             echo '<select name="new_status" class="text-gray-700 p-1 rounded-lg">';
-            echo '<option value="En cours">🟠 En cours</option>';
             echo '<option value="Terminé">🟢 Terminé</option>';
+            echo '<option value="En cours">🟠 En cours</option>';
+            echo '<option value="Ouvert">🔵 Ouvert</option>';
             echo '</select>';
             echo '<button type="submit" name="modifier_task" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Modifier</button>';
             echo '</form>';
